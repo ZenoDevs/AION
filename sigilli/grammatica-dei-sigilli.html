@@ -1,0 +1,364 @@
+<title>Grammatica dei Sigilli</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral+SC:wght@400;600&family=Spectral:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an alchemist's drafting table. Live sigil on the left, the reading of it on the right; laws and a sample folio below. */
+:root{
+  --paper:#e6e9e4;     /* vellum, slightly green */
+  --sheet:#f1f3ef;     /* raised drafting sheet */
+  --ink:#1d2236;       /* iron-gall ink */
+  --ink-soft:#5b6072;
+  --rule:#c6cbc4;
+  --gold:#9a7424;      /* gilding */
+  --ok:#2f7a55; --warn:#a8641a; --bad:#a3342c;
+  --f-display:"Spectral SC","Iowan Old Style",Georgia,serif;
+  --f-body:"Spectral",Georgia,"Times New Roman",serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#11131c; --sheet:#181b27; --ink:#e3dfd2; --ink-soft:#9a9aa8; --rule:#2c3042; --gold:#d6b35f;
+  --ok:#5fbf8f; --warn:#e0a052; --bad:#e2665c; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#11131c; --sheet:#181b27; --ink:#e3dfd2; --ink-soft:#9a9aa8; --rule:#2c3042; --gold:#d6b35f;
+  --ok:#5fbf8f; --warn:#e0a052; --bad:#e2665c; color-scheme:dark }
+
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:var(--f-body);font-size:17px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.wrap{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:44px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,5vw,52px);letter-spacing:.06em;margin:0;line-height:1.1;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:400;font-size:26px;letter-spacing:.05em;margin:0 0 14px}
+.lead{max-width:64ch;margin:10px 0 0;color:var(--ink-soft);font-size:18px}
+.kicker{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+
+/* drafting table */
+.table{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0;background:var(--sheet);border:1px solid var(--rule)}
+@media (max-width:820px){.table{grid-template-columns:minmax(0,1fr)}}
+.plate,.desk{min-width:0}
+.plate{position:relative;border-right:1px solid var(--rule);display:grid;place-items:center;padding:18px}
+@media (max-width:820px){.plate{border-right:0;border-bottom:1px solid var(--rule)}}
+#big{width:100%;max-width:560px;aspect-ratio:1;display:block}
+.redraw{position:absolute;top:12px;right:12px}
+.desk{padding:22px 24px;display:grid;gap:18px;align-content:start;min-width:0}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+@media (max-width:420px){.fields{grid-template-columns:1fr}}
+.field{display:grid;gap:4px;min-width:0}
+.field.wide{grid-column:1/-1}
+label{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+select,input{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:3px;padding:7px 9px;width:100%;min-width:0}
+select:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+button{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;color:var(--ink);background:transparent;border:1px solid var(--rule);border-radius:3px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:var(--gold);color:var(--gold)}
+
+.reading{border-top:1px solid var(--rule);padding-top:16px;display:grid;gap:10px}
+.phrase{font-family:var(--f-display);font-size:22px;line-height:1.3;margin:0;text-wrap:balance}
+.layers{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0;font-size:15px}
+.layers dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding-top:3px}
+.layers dd{margin:0}
+.verdicts{display:flex;flex-wrap:wrap;gap:8px}
+.pill{font-family:var(--f-mono);font-size:12px;padding:4px 9px;border-radius:999px;border:1px solid currentColor}
+.pill.ok{color:var(--ok)} .pill.warn{color:var(--warn)} .pill.bad{color:var(--bad)}
+.effect{font-size:15px;color:var(--ink-soft);margin:0}
+
+/* laws */
+.laws{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:26px 40px}
+.law{min-width:0}
+.law h3{font-family:var(--f-display);font-weight:600;font-size:18px;letter-spacing:.04em;margin:0 0 6px}
+.law h3 span{font-family:var(--f-mono);font-weight:400;font-size:12px;color:var(--gold);margin-right:8px;letter-spacing:.1em}
+.law p{margin:0;max-width:62ch}
+.law .math{margin-top:6px;font-size:14px;color:var(--ink-soft)}
+.math b{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ok);font-weight:500;margin-right:6px}
+
+/* folio */
+.folio{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:18px}
+.card{background:var(--sheet);border:1px solid var(--rule);padding:12px;display:grid;gap:6px;cursor:pointer;text-align:left;font:inherit;color:inherit;border-radius:0}
+.card:hover{border-color:var(--gold);color:inherit}
+.card canvas{width:100%;aspect-ratio:1;display:block}
+.card strong{font-family:var(--f-display);font-weight:400;font-size:18px;letter-spacing:.03em}
+.card small{font-family:var(--f-mono);font-size:11px;color:var(--ink-soft)}
+
+.table-dnd{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:520px}
+th,td{text-align:left;padding:8px 12px 8px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);font-weight:400}
+.sources{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--rule);padding-top:14px;max-width:90ch}
+.sources a{color:var(--gold)}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="kicker">Alchimia geometrica · regole per la campagna</p>
+    <h1>Grammatica dei Sigilli</h1>
+    <p class="lead">Un sigillo è una frase scritta con la geometria. Ogni strato risponde a una domanda: che cosa, come, su chi, quanto, per quanto. Se la frase è sgrammaticata, la magia si rompe o si ritorce. Componi un sigillo qui sotto e leggilo.</p>
+  </header>
+
+  <section class="table" aria-label="Tavolo da disegno">
+    <div class="plate">
+      <canvas id="big" aria-label="Sigillo composto"></canvas>
+      <button class="redraw" id="redraw" type="button">ritraccia</button>
+    </div>
+    <div class="desk">
+      <div class="fields">
+        <div class="field"><label for="f-n">Nucleo · che cosa</label><select id="f-n"></select></div>
+        <div class="field"><label for="f-k">Verbo · come</label><select id="f-k"></select></div>
+        <div class="field"><label for="f-t">Cuore · su quanti</label><select id="f-t"></select></div>
+        <div class="field"><label for="f-r">Anelli · quanto</label><select id="f-r"></select></div>
+        <div class="field wide"><label for="f-d">Segni · durata in round (0–63, scritta in binario)</label><input id="f-d" type="number" min="0" max="63" step="1" value="5"></div>
+      </div>
+      <div class="reading" aria-live="polite">
+        <p class="phrase" id="phrase"></p>
+        <dl class="layers" id="layers"></dl>
+        <div class="verdicts" id="verdicts"></div>
+        <p class="effect" id="effect"></p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">Le sei leggi</p>
+    <h2>Perché un sigillo funziona</h2>
+    <div class="laws">
+      <div class="law">
+        <h3><span>I</span>Il sigillo descrive, non comanda</h3>
+        <p>Il nucleo deve corrispondere al materiale che hai davanti. Un triangolo su una pietra non fa nulla: la pietra non ha il potenziale del fuoco. Il sigillo indica solo una strada che la cosa poteva già prendere.</p>
+      </div>
+      <div class="law">
+        <h3><span>II</span>Riga e compasso</h3>
+        <p>Ogni linea deve poter essere tracciata con riga e compasso. Il triangolo, il quadrato, il pentagono, l'esagono, l'ottagono, il dodecagono e il raro 17-gono si possono costruire esattamente. Ettagono e ennagono no: si disegnano solo a occhio, e da quell'approssimazione la magia perde. Sono i sigilli spuri, usati dai Quadratori.</p>
+        <p class="math"><b>Matematica reale</b>Teorema di Gauss–Wantzel: un n-gono regolare è costruibile se e solo se n è una potenza di 2 per un prodotto di primi di Fermat distinti (3, 5, 17, 257, 65537).</p>
+      </div>
+      <div class="law">
+        <h3><span>III</span>Tratto unico o figure legate</h3>
+        <p>Il verbo è la stella {n/k} inscritta nel nucleo. Se la stella si chiude in un solo tratto, la materia <em>si trasforma</em>, e la penna non va mai sollevata. Se invece si spezza in più figure intrecciate, come l'esagramma fatto di due triangoli, le parti vengono <em>legate</em>. Con k = 1 resta il poligono: la cosa viene <em>tenuta</em> com'è.</p>
+        <p class="math"><b>Matematica reale</b>{n/k} è un tratto unico quando mcd(n, k) = 1. Altrimenti si scompone in mcd(n, k) poligoni stellati uguali.</p>
+      </div>
+      <div class="law">
+        <h3><span>IV</span>Consonanza</h3>
+        <p>Il cuore del sigillo è una tabellina disegnata sul cerchio, e ogni sua punta è un bersaglio. La simmetria del cuore deve stare dentro quella del nucleo. Per questo un pentagono di Vita cura una persona o cinque, mai due. Un cuore dissonante si ritorce su chi traccia.</p>
+        <p class="math"><b>Matematica reale</b>Unendo sul cerchio ogni punto i al punto m·i (modulo P) appare un inviluppo con m − 1 cuspidi: il cardioide per m = 2, il nefroide per m = 3.</p>
+      </div>
+      <div class="law">
+        <h3><span>V</span>Gli anelli sono il prezzo</h3>
+        <p>Ogni anello di chiusura aggiunge un grado di potenza e va tracciato perfetto. Un anello aperto lascia uscire la magia senza forma. Per spezzare il sigillo di qualcun altro basta un taglio netto che attraversi tutti gli anelli.</p>
+      </div>
+      <div class="law">
+        <h3><span>VI</span>Ogni sigillo si legge</h3>
+        <p>I segni tra gli anelli dicono quanto dura l'effetto, in binario: una barra vale 1, un punto vale 0, letti in senso orario da nord. Chi conosce la grammatica può leggere un sigillo nemico prima che si attivi, e cancellarlo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">Folio · sigilli d'esempio</p>
+    <h2>Otto sigilli noti</h2>
+    <div class="folio" id="folio"></div>
+  </section>
+
+  <section>
+    <p class="kicker">Al tavolo · D&amp;D 5e</p>
+    <h2>Tradurlo in regole</h2>
+    <div class="table-dnd">
+      <table>
+        <tr><th>Elemento del sigillo</th><th>Regola di gioco</th></tr>
+        <tr><td>Anelli (1–4)</td><td>Livello dell'incantesimo equivalente: 1 anello = 1°–2°, 2 = 3°–4°, 3 = 5°–6°, 4 = 7°+. Tracciare richiede 1 azione per anello.</td></tr>
+        <tr><td>Nucleo sbagliato per il materiale</td><td>Nessun effetto. Lo slot o il materiale vanno comunque persi.</td></tr>
+        <tr><td>Sigillo spurio (7, 9, …)</td><td>Tira d20: con un risultato pari o inferiore a 3 × anelli l'effetto devia (decide il DM).</td></tr>
+        <tr><td>Cuore dissonante</td><td>L'effetto colpisce anche chi traccia. TS su Costituzione, CD 10 + 2 × anelli.</td></tr>
+        <tr><td>Leggere un sigillo altrui</td><td>Arcano, CD 10 + 2 × anelli. Con un successo di 5 o più capisci anche la durata.</td></tr>
+        <tr><td>Spezzare un sigillo</td><td>Un'azione e un attacco o una prova di Destrezza contro CA 10 + anelli per tagliare tutti gli anelli.</td></tr>
+        <tr><td>Vita (pentagono) su un corpo</td><td>Serve conoscere quel corpo: tiene insieme il sistema del π, con cifre richieste e prove di Medicina.</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <p class="sources">Ispirazione: la struttura sigillo, segni e anello di <a href="https://en.wikipedia.org/wiki/Witch_Hat_Atelier" target="_blank" rel="noopener">Witch Hat Atelier</a> (vedi anche la <a href="https://witch-hat-atelier.fandom.com/wiki/Magic" target="_blank" rel="noopener">wiki dei fan</a>). Matematica: <a href="https://en.wikipedia.org/wiki/Constructible_polygon" target="_blank" rel="noopener">poligoni costruibili e teorema di Gauss–Wantzel</a>. Simmetria a sei punte del ghiaccio: <a href="https://www.its.caltech.edu/~atomic/snowcrystals/faqs/faqs.htm" target="_blank" rel="noopener">Caltech, snow crystals FAQ</a>. Associazioni tra forme ed elementi, leggi e regole di gioco sono invenzione per la campagna.</p>
+</div>
+
+<script>
+(() => {
+const TAU = Math.PI*2;
+const gcd = (a,b) => b ? gcd(b, a % b) : a;
+const FERMAT = [3,5,17,257,65537];
+function constructible(n){ while (n % 2 === 0) n /= 2; for (const p of FERMAT){ if (n % p === 0){ n /= p; if (n % p === 0) return false; } } return n === 1; }
+
+const NUCLEI = {
+  3:{name:'Fuoco', hue:'#d0532d', note:'tre lati: ciò che brucia'},
+  4:{name:'Pietra', hue:'#9b7a45', note:'quattro lati: ciò che regge'},
+  5:{name:'Vita', hue:'#3f9a5c', note:'cinque lati: ciò che cresce, il rapporto aureo'},
+  6:{name:'Acqua', hue:'#2b8fa6', note:'sei lati, come il cristallo di ghiaccio'},
+  7:{name:'Ombra', hue:'#7a4fb0', note:'sette lati: non costruibile, proibito'},
+  8:{name:'Aria', hue:'#6d8fc9', note:'otto lati: i venti'},
+  9:{name:'Sogno', hue:'#a24f8f', note:'nove lati: non costruibile, proibito'},
+  12:{name:'Metallo', hue:'#7b8794', note:'dodici lati: ciò che si forgia'},
+  17:{name:'Cielo', hue:'#b88a24', note:'diciassette lati: il sigillo di Gauss'}
+};
+const ROMAN = ['','I','II','III','IV'];
+
+function verbOf(n,k){
+  if (k === 1) return {verb:'Tenere', kind:'polygon', desc:'il poligono da solo'};
+  const g = gcd(n,k);
+  if (g === 1) return {verb:'Trasformare', kind:'uni', desc:`stella {${n}/${k}} in un solo tratto`};
+  return {verb:'Legare', kind:'compound', desc:`${g} figure {${n/g}/${k/g}} intrecciate`};
+}
+
+/* ---------- geometry -> strokes ---------- */
+function build(s){
+  const {n,k,t,r,d} = s, strokes = [];
+  const R = .74, V = i => -Math.PI/2 + TAU*i/n, P = (a,rad) => [Math.cos(a)*rad, Math.sin(a)*rad];
+  const circle = (rad, seg=160) => Array.from({length:seg+1}, (_,i) => P(-Math.PI/2 + TAU*i/seg, rad));
+  // 1 outer rings (drawn first, like a compass ring)
+  for (let i = 0; i < r; i++) strokes.push({pts:circle(.98 - i*.036), w: i === 0 ? 1.8 : 1, role:'ring'});
+  // 2 containment circle
+  strokes.push({pts:circle(R), w:1.2, role:'ink'});
+  // 3 nucleus polygon
+  strokes.push({pts:Array.from({length:n+1}, (_,i) => P(V(i), R)), w:2.2, role:'el'});
+  // 4 verb star
+  if (k > 1){
+    const g = gcd(n,k), m = n/g;
+    for (let c = 0; c < g; c++) strokes.push({pts:Array.from({length:m+1}, (_,j) => P(V(c + j*k), R)), w:1.6, role:'el'});
+  }
+  // 5 vertex nodes
+  for (let i = 0; i < n; i++){ const [x,y] = P(V(i), R); strokes.push({pts:Array.from({length:25}, (_,j) => [x + Math.cos(TAU*j/24)*.022, y + Math.sin(TAU*j/24)*.022]), w:1.2, role:'ink'}); }
+  // 6 heart: times table with t cusps
+  const m = t + 1, PN = 96, rc = Math.max(.2, Math.min(.42, R*Math.cos(Math.PI*k/n)*.86));
+  strokes.push({pts:circle(rc, 96), w:1, role:'ink'});
+  for (let i = 1; i < PN; i++){ const a = -Math.PI/2 + TAU*i/PN, b = -Math.PI/2 + TAU*((m*i) % PN)/PN; if ((m*i) % PN === i) continue;
+    strokes.push({pts:[P(a,rc), P(b,rc)], w:.6, role:'heart'}); }
+  // 7 duration bits between containment and rings
+  for (let j = 0; j < 6; j++){
+    const a = -Math.PI/2 + TAU*j/6 + TAU/12, bit = (d >> j) & 1;
+    if (bit){ strokes.push({pts:[P(a,.78), P(a,.86)], w:2, role:'gold'}); strokes.push({pts:[P(a-.04,.86), P(a+.04,.86)], w:1.4, role:'gold'}); }
+    else { const [x,y] = P(a,.82); strokes.push({pts:Array.from({length:17}, (_,i) => [x + Math.cos(TAU*i/16)*.012, y + Math.sin(TAU*i/16)*.012]), w:1.2, role:'gold'}); }
+  }
+  // 8 seal point
+  strokes.push({pts:Array.from({length:25}, (_,j) => [Math.cos(TAU*j/24)*.03, Math.sin(TAU*j/24)*.03]), w:1.6, role:'gold'});
+  for (const st of strokes){ let L = 0; for (let i = 1; i < st.pts.length; i++) L += Math.hypot(st.pts[i][0]-st.pts[i-1][0], st.pts[i][1]-st.pts[i-1][1]); st.len = L; }
+  return strokes;
+}
+
+function cssv(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function render(cv, s, progress, opts = {}){
+  const dpr = Math.min(devicePixelRatio || 1, 2), w = cv.clientWidth || 300;
+  if (cv.width !== Math.round(w*dpr)){ cv.width = Math.round(w*dpr); cv.height = Math.round(w*dpr); }
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,w);
+  const strokes = s._strokes || (s._strokes = build(s));
+  const ink = cssv('--ink'), gold = cssv('--gold'), el = NUCLEI[s.n].hue, half = w/2, sc = half*.96;
+  const total = strokes.reduce((a,b) => a + b.len, 0);
+  let budget = total * progress;
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches && document.documentElement.dataset.theme !== 'light' || document.documentElement.dataset.theme === 'dark';
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const spur = !constructible(s.n);
+  for (const st of strokes){
+    if (budget <= 0) break;
+    const col = st.role === 'el' ? el : st.role === 'gold' ? gold : ink;
+    ctx.strokeStyle = col; ctx.globalAlpha = st.role === 'heart' ? .45 : 1;
+    ctx.lineWidth = st.w * (opts.thin ? .7 : 1) * Math.max(1, w/420);
+    if (dark && st.role === 'el'){ ctx.shadowColor = el; ctx.shadowBlur = opts.thin ? 4 : 10; } else ctx.shadowBlur = 0;
+    ctx.beginPath();
+    let used = 0;
+    for (let i = 0; i < st.pts.length; i++){
+      let [x,y] = st.pts[i];
+      if (spur && st.role === 'el'){ x += Math.sin(i*12.9 + s.n)*.006; y += Math.cos(i*7.3 + s.k)*.006; }
+      const X = half + x*sc, Y = half + y*sc;
+      if (i === 0){ ctx.moveTo(X,Y); continue; }
+      const [px,py] = st.pts[i-1], seg = Math.hypot(x-px, y-py);
+      if (used + seg > budget){ const f = (budget-used)/seg; ctx.lineTo(half + (px + (x-px)*f)*sc, half + (py + (y-py)*f)*sc); used = budget; break; }
+      ctx.lineTo(X,Y); used += seg;
+    }
+    ctx.stroke(); budget -= st.len;
+  }
+  ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+}
+
+/* ---------- reading ---------- */
+function read(s){
+  const N = NUCLEI[s.n], v = verbOf(s.n, s.k), cons = s.t === 1 || s.n % s.t === 0, build = constructible(s.n);
+  const targ = s.t === 1 ? 'un solo bersaglio' : `${s.t} bersagli`;
+  const dur = s.d === 0 ? 'istantaneo' : `${s.d} round`;
+  const phrase = `${N.name} · ${v.verb} · ${targ} · grado ${ROMAN[s.r]} · ${dur}`;
+  const layers = [
+    ['Nucleo', `${s.n}-gono, ${N.note}`],
+    ['Verbo', `${v.verb}: ${v.desc}`],
+    ['Cuore', `tabellina ×${s.t+1} sul cerchio, ${s.t === 1 ? 'cardioide con 1 cuspide' : (s.t === 2 ? 'nefroide con 2 cuspidi' : s.t + ' cuspidi')}`],
+    ['Anelli', `${s.r} · grado ${ROMAN[s.r]}`],
+    ['Segni', `${s.d.toString(2).padStart(6,'0').split('').reverse().join(' ')} → ${dur}`]
+  ];
+  const verdicts = [
+    build ? ['ok','costruibile'] : ['warn','spurio: solo a mano'],
+    cons ? ['ok','consonante'] : ['bad',`dissonante: ${s.t} non divide ${s.n}`],
+    v.kind === 'uni' ? ['ok','tratto unico'] : v.kind === 'compound' ? ['ok','figure legate'] : ['ok','poligono semplice']
+  ];
+  let effect;
+  if (!cons) effect = `La simmetria del cuore non entra nel ${s.n}-gono. Il sigillo si attiva, ma una parte dell'effetto torna su chi lo ha tracciato.`;
+  else if (!build) effect = `Il ${s.n}-gono non si costruisce con riga e compasso. Il sigillo funziona, ma l'approssimazione lascia uscire lo Scarto: l'effetto può deviare.`;
+  else effect = `Sigillo stabile. ${EFFECTS[v.verb](N.name, targ)}`;
+  return {phrase, layers, verdicts, effect};
+}
+const EFFECTS = {
+  Tenere: (e,t) => `Mantiene ${e.toLowerCase()} nello stato in cui si trova, su ${t}.`,
+  Trasformare: (e,t) => `Porta ${e.toLowerCase()} verso un altro stato possibile, su ${t}. La penna non si solleva mai.`,
+  Legare: (e,t) => `Vincola ${e.toLowerCase()} e lo usa per unire o trattenere ${t}.`
+};
+
+/* ---------- builder ---------- */
+const $ = id => document.getElementById(id);
+const S = {n:6, k:2, t:2, r:2, d:10};
+const fn = $('f-n'), fk = $('f-k'), ft = $('f-t'), fr = $('f-r'), fd = $('f-d');
+for (const n of Object.keys(NUCLEI)) fn.add(new Option(`${n} · ${NUCLEI[n].name}`, n));
+for (let t = 1; t <= 6; t++) ft.add(new Option(t === 1 ? '1 bersaglio' : `${t} bersagli`, t));
+for (let r = 1; r <= 4; r++) fr.add(new Option(`${r} · grado ${ROMAN[r]}`, r));
+function fillVerbs(){
+  fk.innerHTML = '';
+  const max = S.n === 3 ? 1 : Math.floor(S.n/2);
+  for (let k = 1; k <= max; k++){ const v = verbOf(S.n,k); fk.add(new Option(k === 1 ? `Tenere · {${S.n}}` : `${v.verb} · {${S.n}/${k}}`, k)); }
+  if (S.k > max) S.k = max; fk.value = S.k;
+}
+function sync(){ fn.value = S.n; fillVerbs(); ft.value = S.t; fr.value = S.r; fd.value = S.d; }
+let anim = 0, t0 = 0;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function update(){
+  delete S._strokes;
+  const R = read(S);
+  $('phrase').textContent = R.phrase;
+  $('layers').innerHTML = R.layers.map(([a,b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('');
+  $('verdicts').innerHTML = R.verdicts.map(([c,txt]) => `<span class="pill ${c}">${txt}</span>`).join('');
+  $('effect').textContent = R.effect;
+  t0 = performance.now(); cancelAnimationFrame(anim);
+  const big = $('big');
+  const step = now => { const p = reduce ? 1 : Math.min(1, (now - t0)/3200); render(big, S, 1 - Math.pow(1-p, 2.2)); if (p < 1) anim = requestAnimationFrame(step); };
+  anim = requestAnimationFrame(step);
+}
+fn.onchange = () => { S.n = +fn.value; fillVerbs(); S.k = +fk.value; if (S.n === 3) S.k = 1; update(); };
+fk.onchange = () => { S.k = +fk.value; update(); };
+ft.onchange = () => { S.t = +ft.value; update(); };
+fr.onchange = () => { S.r = +fr.value; update(); };
+fd.oninput = () => { S.d = Math.max(0, Math.min(63, Math.round(+fd.value || 0))); update(); };
+$('redraw').onclick = update;
+
+/* ---------- folio ---------- */
+const FOLIO = [
+  {name:'Scintilla', n:3,k:1,t:1,r:1,d:0, use:'accende ciò che già può bruciare'},
+  {name:'Fiamma a tre', n:3,k:1,t:3,r:2,d:3, use:'tre fuochi da un solo tratto'},
+  {name:'Catene di brina', n:6,k:2,t:2,r:2,d:10, use:'lega due nemici nel ghiaccio'},
+  {name:'Ricucitura', n:5,k:2,t:1,r:3,d:0, use:'chiude una ferita profonda'},
+  {name:'Muro quadrato', n:4,k:1,t:4,r:3,d:60, use:'tiene ferma la pietra su quattro lati'},
+  {name:'Lama viva', n:12,k:5,t:3,r:2,d:6, use:'il metallo cambia forma in mano'},
+  {name:'Sigillo di Gauss', n:17,k:6,t:1,r:4,d:63, use:'leggendario, si dice muova il cielo'},
+  {name:'Spurio dei Quadratori', n:7,k:3,t:2,r:4,d:21, use:'proibito, instabile, dissonante'}
+];
+const folio = $('folio'), cards = [];
+for (const f of FOLIO){
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'card';
+  b.innerHTML = `<canvas></canvas><strong>${f.name}</strong><small>${NUCLEI[f.n].name} · ${verbOf(f.n,f.k).verb} · ${f.use}</small>`;
+  b.onclick = () => { Object.assign(S, {n:f.n,k:f.k,t:f.t,r:f.r,d:f.d}); sync(); update(); $('big').scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'center'}); };
+  folio.appendChild(b); cards.push([b.querySelector('canvas'), {...f}]);
+}
+function drawFolio(){ for (const [c,f] of cards){ delete f._strokes; render(c, f, 1, {thin:true}); } }
+
+sync(); update(); drawFolio();
+addEventListener('resize', () => { render($('big'), S, 1); drawFolio(); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { render($('big'), S, 1); drawFolio(); });
+new MutationObserver(() => { render($('big'), S, 1); drawFolio(); }).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+})();
+</script>
